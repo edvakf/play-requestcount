@@ -2,6 +2,10 @@
 
 RequestCountFilter for Play Framework
 
+[![Build Status](https://travis-ci.org/edvakf/play-requestcount.svg)](https://travis-ci.org/edvakf/play-requestcount)
+[![Coverage Status](https://coveralls.io/repos/edvakf/play-requestcount/badge.svg?branch=master&service=github)](https://coveralls.io/github/edvakf/play-requestcount?branch=master)
+![](https://img.shields.io/github/release/edvakf/play-requestcount.svg?label=JitPack)
+
 ## Install
 
 Add to your build.sbt;
