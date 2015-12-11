@@ -12,7 +12,7 @@ Add to your build.sbt;
 ```sbt
 resolvers += "jitpack" at "https://jitpack.io"
 
-libraryDependencies += "com.github.edvakf" % "play-requestcount" % "0.0.1"
+libraryDependencies += "com.github.edvakf" % "play-requestcount" % "0.0.2"
 ```
 
 ## Usage
