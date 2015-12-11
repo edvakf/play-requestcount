@@ -7,7 +7,7 @@ import play.api.mvc.{Results, Result, RequestHeader, Filter}
 import java.util.concurrent.atomic.AtomicInteger
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.libs.concurrent.Execution.Implicits._
 
 class RequestCountFilter @Inject() (configuration: Configuration) extends Filter {
 
