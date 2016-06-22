@@ -8,8 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
+import akka.stream.Materializer
 
-class RequestCountFilter @Inject() (configuration: Configuration) extends Filter {
+class RequestCountFilter @Inject() (configuration: Configuration)(implicit val mat: Materializer) extends Filter {
 
   val maybePath = configuration.getString("requestcount.path")
 

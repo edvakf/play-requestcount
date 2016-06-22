@@ -3,7 +3,7 @@ package com.github.edvakf.play.requestcount
 import org.scalatest.FunSuite
 import play.api.Configuration
 import play.api.mvc.{Action, Result, Results}
-import play.api.test.FakeRequest
+import play.api.test.{FakeApplication, FakeRequest}
 import play.api.test.Helpers._
 
 import scala.concurrent.Promise
@@ -11,6 +11,7 @@ import scala.concurrent.Promise
 class RequestCountFilterTest extends FunSuite {
 
   test("returns zero by default") {
+    implicit val materializer = FakeApplication().materializer
     val config = Configuration("requestcount.path" -> "/requestcount")
     val filter = new RequestCountFilter(config)
 
@@ -23,6 +24,7 @@ class RequestCountFilterTest extends FunSuite {
   }
 
   test("increment and decrement") {
+    implicit val materializer = FakeApplication().materializer
     val config = Configuration("requestcount.path" -> "/requestcount")
     val filter = new RequestCountFilter(config)
 
@@ -47,6 +49,7 @@ class RequestCountFilterTest extends FunSuite {
   }
 
   test("nothing happens if config is not set") {
+    implicit val materializer = FakeApplication().materializer
     val config = Configuration()
     val filter = new RequestCountFilter(config)
 
