@@ -17,6 +17,9 @@ libraryDependencies += "com.github.edvakf" % "play-requestcount" % "0.0.2"
 
 // Play 2.5
 libraryDependencies += "com.github.edvakf" % "play-requestcount" % "0.0.3"
+
+// Play 2.6
+libraryDependencies += "com.github.edvakf" % "play-requestcount" % "0.0.4"
 ```
 
 ## Usage
