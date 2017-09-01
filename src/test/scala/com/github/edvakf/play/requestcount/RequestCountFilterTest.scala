@@ -1,21 +1,43 @@
 package com.github.edvakf.play.requestcount
 
-import org.scalatest.FunSuite
+import javax.inject.Inject
+
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import org.scalatest.{BeforeAndAfter, FunSuite}
 import play.api.Configuration
-import play.api.mvc.{Action, Result, Results}
-import play.api.test.{FakeApplication, FakeRequest}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 import scala.concurrent.Promise
 
-class RequestCountFilterTest extends FunSuite {
+class TestController @Inject() (cc: ControllerComponents) extends AbstractController(cc) {
+  def index = Action { Ok("ok") }
+  def indexP(promise: Promise[Result]) = Action.async {
+    promise.future
+  }
+}
+
+class RequestCountFilterTest extends FunSuite with BeforeAndAfter {
+
+  implicit val actorSystem = ActorSystem()
+  implicit val executionContext = actorSystem.dispatcher
+  implicit val materialize = ActorMaterializer()
+
+  after {
+    actorSystem.terminate()
+  }
+
+  val app = new GuiceApplicationBuilder().build()
+  val controller = app.injector.instanceOf[TestController]
 
   test("returns zero by default") {
-    implicit val materializer = FakeApplication().materializer
     val config = Configuration("requestcount.path" -> "/requestcount")
     val filter = new RequestCountFilter(config)
 
-    val action = Action(Results.Ok("ok"))
+    val action = controller.index
 
     val res = filter(action)(FakeRequest(GET, "/requestcount")).run
 
@@ -24,12 +46,11 @@ class RequestCountFilterTest extends FunSuite {
   }
 
   test("increment and decrement") {
-    implicit val materializer = FakeApplication().materializer
     val config = Configuration("requestcount.path" -> "/requestcount")
     val filter = new RequestCountFilter(config)
 
     val promise = Promise[Result]()
-    val action = Action.async(promise.future)
+    val action = controller.indexP(promise)
 
     // this request blocks until promise.success is called
     val res0 = filter(action)(FakeRequest(GET, "/foo")).run
@@ -49,11 +70,10 @@ class RequestCountFilterTest extends FunSuite {
   }
 
   test("nothing happens if config is not set") {
-    implicit val materializer = FakeApplication().materializer
     val config = Configuration()
     val filter = new RequestCountFilter(config)
 
-    val action = Action(Results.Ok("ok"))
+    val action = controller.index
 
     val res = filter(action)(FakeRequest(GET, "/foo")).run
 

@@ -3,16 +3,15 @@ package com.github.edvakf.play.requestcount
 import javax.inject.Inject
 
 import play.api.Configuration
-import play.api.mvc.{Results, Result, RequestHeader, Filter}
+import play.api.mvc.{Filter, RequestHeader, Result, Results}
 import java.util.concurrent.atomic.AtomicInteger
 
-import scala.concurrent.Future
-import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.{ExecutionContext, Future}
 import akka.stream.Materializer
 
-class RequestCountFilter @Inject() (configuration: Configuration)(implicit val mat: Materializer) extends Filter {
+class RequestCountFilter @Inject() (configuration: Configuration)(implicit val mat: Materializer, executionContext: ExecutionContext) extends Filter {
 
-  val maybePath = configuration.getString("requestcount.path")
+  val maybePath = configuration.getOptional[String]("requestcount.path")
 
   // number of active requests
   val count = new AtomicInteger(0)
