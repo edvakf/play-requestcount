@@ -4,7 +4,9 @@ name := "play-requestcount"
 
 version := "0.0.4"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.12.8"
+
+crossScalaVersions ++= Seq("2.11.12", "2.12.8")
 
 scalacOptions ++= Seq("-deprecation")
 
